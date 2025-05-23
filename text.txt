@@ -1,0 +1,27 @@
+31st may: 
+
+Final assessment 
+
+
+
+minimum 2 TC
+
+How many workflows  ML model doesn’t matter   branching strategy and explain why we are using that brach?
+
+
+
+
+1. Kaggel  dataset, build docker file , Github, branching strategy
+
+
+Which words we repeat most she will ask that
+
+
+
+
+Napkin is a ai tool for ppt
+
+
+
+
+The pairs plot indicates a moderate negative correlation (r = -0.35) between systolic blood pressure (SBP) measurements at Week 6 and Week 12 following aerobic exercise training. The SBP data show a bimodal and right-skewed distribution, with visible outliers (notably above 300 mm Hg and below 50 mm Hg), suggesting the presence of either measurement errors or participants with atypical responses. The scatterplot and density plots together support a potential training effect reducing SBP for many participants, though the impact varies and is not strongly linea
