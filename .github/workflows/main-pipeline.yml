@@ -1,13 +1,14 @@
-name: Train, Test, Build, and Push Docker Image
+name: Train, Test, Code Quality, Build, and Push Docker Image
 
 on:
   push:
     branches:
-      - main
+      - uat
 
 env:
   BRANCH_NAME: ${{ github.ref_name }}
   SHORT_SHA: ${{ github.sha }}
+  IMAGE_NAME: ${{ secrets.DOCKER_USERNAME }}/iris-api
 
 jobs:
   train-test-build-push:
@@ -34,6 +35,16 @@ jobs:
       - name: Run unit tests
         run: pytest
 
+      - name: SonarQube Scanner
+        uses: sonarsource/sonarcloud-github-action@v2
+        with:
+          projectBaseDir: .
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_HOST_URL: https://sonarcloud.io
+          SONAR_PROJECT_KEY: your-project-key
+          SONAR_ORGANIZATION: your-org-name
+
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
@@ -45,7 +56,6 @@ jobs:
 
       - name: Build and push Docker image with tags
         run: |
-          IMAGE_NAME=${{ secrets.DOCKER_USERNAME }}/iris-api
           SHORT_SHA=$(echo "${{ github.sha }}" | cut -c1-7)
 
           docker build -t $IMAGE_NAME:latest \
@@ -55,3 +65,8 @@ jobs:
           docker push $IMAGE_NAME:latest
           docker push $IMAGE_NAME:${{ github.ref_name }}
           docker push $IMAGE_NAME:${{ github.ref_name }}-$SHORT_SHA
+
+      - name: Prepare for UAT
+        run: |
+          echo "Preparing for UAT environment..."
+          echo "Trigger UAT pipeline or deploy to staging cluster if needed."
