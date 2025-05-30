@@ -9,7 +9,7 @@ app = Flask(__name__)
 
 @app.route('/')
 def home():
-    return "Iris Prediction API is running version 3!"
+    return "Iris Prediction API is running version 4!"
 
 @app.route('/predict', methods=['POST'])
 def predict():
