@@ -1,57 +1,30 @@
-name: Train, Test, Build, and Push Docker Image
+name: Deploy to Minikube on GCP VM
 
 on:
   push:
     branches:
       - main
 
-env:
-  BRANCH_NAME: ${{ github.ref_name }}
-  SHORT_SHA: ${{ github.sha }}
-
 jobs:
-  train-test-build-push:
+  deploy:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+    - name: Checkout code
+      uses: actions/checkout@v3
 
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.9'
+    - name: Authenticate to GCP
+      uses: google-github-actions/auth@v2
+      with:
+        credentials_json: '${{ secrets.GIT_GOOGLE_TOKEN }}'
 
-      - name: Install Python dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install -r requirements.txt
-          pip install pytest
+    - name: Install gcloud CLI
+      uses: google-github-actions/setup-gcloud@v1
+      with:
+        project_id: your-gcp-project-id
 
-      - name: Train the model
-        run: python train_model.py
-
-      - name: Run unit tests
-        run: pytest
-
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-
-      - name: Log in to Docker Hub
-        uses: docker/login-action@v2
-        with:
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_PASSWORD }}
-
-      - name: Build and push Docker image with tags
-        run: |
-          IMAGE_NAME=${{ secrets.DOCKER_USERNAME }}/iris-api
-          SHORT_SHA=$(echo "${{ github.sha }}" | cut -c1-7)
-
-          docker build -t $IMAGE_NAME:latest \
-                       -t $IMAGE_NAME:${{ github.ref_name }} \
-                       -t $IMAGE_NAME:${{ github.ref_name }}-$SHORT_SHA .
-
-          docker push $IMAGE_NAME:latest
-          docker push $IMAGE_NAME:${{ github.ref_name }}
-          docker push $IMAGE_NAME:${{ github.ref_name }}-$SHORT_SHA
+    - name: SSH and deploy (inline script)
+      run: |
+        gcloud compute ssh l00187422@apurva \
+          --zone=europe-west2-c \
+          --command="touch /home/l00187422/cd.txt"
