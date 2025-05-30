@@ -83,5 +83,5 @@ jobs:
               rm -rf mlops-wine-quality && \
               git clone https://github.com/Apurva26-git/mlops-wine-quality.git && \
               cd mlops-wine-quality/k8s && \
-              /usr/local/bin/minikube/kubectl apply -f .
+              /usr/local/bin/minikube kubectl apply -f .
             "
