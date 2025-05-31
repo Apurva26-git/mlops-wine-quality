@@ -9,7 +9,7 @@ def client():
 def test_home(client):
     response = client.get('/')
     assert response.status_code == 200
-    assert b'Iris Flower Predictor' in response.data  # Verifies HTML loads
+    assert b'Iris Flower Predictor' in response.data  
 
 def test_prediction(client):
     response = client.post('/predict', data={
