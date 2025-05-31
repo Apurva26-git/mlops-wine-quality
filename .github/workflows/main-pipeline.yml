@@ -47,7 +47,9 @@ jobs:
         run: |
           IMAGE_NAME=${{ secrets.DOCKER_USERNAME }}/iris-api
           SHORT_SHA=$(echo "${{ github.sha }}" | cut -c1-7)
-
+#2 docker img tags 
+#latest tag kubernetes tag
+#branch name + commit id : rollback specific version
           docker build -t $IMAGE_NAME:latest \
                        -t $IMAGE_NAME:${{ github.ref_name }} \
                        -t $IMAGE_NAME:${{ github.ref_name }}-$SHORT_SHA .
@@ -70,6 +72,7 @@ jobs:
           credentials_json: '${{ secrets.GIT_GOOGLE_TOKEN }}'
 
       - name: Install gcloud CLI
+      #google cloud func to access virtual machine from github 
         uses: google-github-actions/setup-gcloud@v1
         with:
           project_id: your-gcp-project-id  # <-- Replace with your actual GCP project ID
